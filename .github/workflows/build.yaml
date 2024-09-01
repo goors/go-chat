@@ -46,7 +46,6 @@ jobs:
         run: |
           go build -o myapp ./...
           tar -czf myapp.tar.gz myapp
-          echo "Uploading build artifact..."
         uses: actions/upload-artifact@v3
         with:
           name: go-build
