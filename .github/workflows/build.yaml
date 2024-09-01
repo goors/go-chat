@@ -1,0 +1,53 @@
+name: Go Build and Test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Build and Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: '1.20' # Replace with your Go version
+
+      - name: Cache Go modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+
+      - name: Install dependencies
+        run: go mod tidy
+
+      - name: Build
+        run: go build -v ./...
+
+      - name: Run tests
+        run: go test -v ./...
+
+      - name: Build and Upload Go binary
+        if: github.event_name == 'push'
+        run: |
+          go build -o myapp ./...
+          tar -czf myapp.tar.gz myapp
+          echo "Uploading build artifact..."
+        uses: actions/upload-artifact@v3
+        with:
+          name: go-build
+          path: myapp.tar.gz
