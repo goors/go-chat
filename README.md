@@ -5,18 +5,18 @@
 - support telnet
 
 ### How to run gp server?
-- `go run chan_chat_server.go`
+- `go run cmd/server/chan_chat_server.go`
 
 ### How to run gp client?
-- `go run chan_chat_client.go`
+- `go run  cmd/server/chan_chat_client.go`
 
 ### Command
 - `/exit` -> exist chat
 - `/online` -> list online users
 
 ### Build
-- `go build -o client chan_chat_client.go`
-- `go build -o server chan_chat_server.go`
+- `go build -o client cmd/client/chan_chat_client.go`
+- `go build -o server cmd/server/chan_chat_server.go`
 
 ### Run buil
 - `./server`
