@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"github.com/chzyer/readline"
+	godotenv "github.com/joho/godotenv"
 	"net"
 	"os"
 	"os/signal"
@@ -18,7 +19,16 @@ var (
 )
 
 func main() {
-	conn, err := net.Dial("tcp", "localhost:8080") // Connect to the server
+
+	err := godotenv.Load()
+	if err != nil {
+		fmt.Println("Error loading .env file:", err)
+		return
+	}
+	serverPort := os.Getenv("SERVER_PORT")
+	serverAddress := os.Getenv("SERVER_ADDRESS")
+
+	conn, err := net.Dial("tcp", serverAddress+":"+serverPort) // Connect to the server
 	if err != nil {
 		fmt.Println("Error connecting to server:", err)
 		return

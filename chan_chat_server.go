@@ -5,6 +5,7 @@ import (
 	"context"
 	"fmt"
 	redis "github.com/go-redis/redis/v8"
+	godotenv "github.com/joho/godotenv"
 	"net"
 	"os"
 	"os/signal"
@@ -26,9 +27,19 @@ var (
 )
 
 func initRedis() {
+
+	redisHost := os.Getenv("REDIS_HOST")
+	redisPort := os.Getenv("REDIS_PORT")
+
+	if redisHost == "" || redisPort == "" {
+		fmt.Println("REDIS_HOST or REDIS_PORT not set in .env file")
+		return
+	}
+
 	redisClient = redis.NewClient(&redis.Options{
-		Addr: "localhost:6379", // Redis server address
+		Addr: fmt.Sprintf("%s:%s", redisHost, redisPort), // Redis server address from environment variables
 	})
+
 }
 
 func generateUserID(conn net.Conn) string {
@@ -36,9 +47,18 @@ func generateUserID(conn net.Conn) string {
 }
 
 func main() {
+
+	err := godotenv.Load()
+	if err != nil {
+		fmt.Println("Error loading .env file:", err)
+		return
+	}
+
 	initRedis()
 
-	listener, err := net.Listen("tcp", ":8080") // Start listening on port 8080
+	serverPort := os.Getenv("SERVER_PORT")
+
+	listener, err := net.Listen("tcp", ":"+serverPort) // Start listening on port 8080
 	if err != nil {
 		fmt.Println("Error starting server:", err)
 		return
