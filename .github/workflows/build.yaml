@@ -40,13 +40,3 @@ jobs:
 
       - name: Run tests
         run: go test -v ./...
-
-      - name: Build and Upload Go binary
-        if: github.event_name == 'push'
-        run: |
-          go build -o myapp ./...
-          tar -czf myapp.tar.gz myapp
-        uses: actions/upload-artifact@v3
-        with:
-          name: go-build
-          path: myapp.tar.gz
