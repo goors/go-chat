@@ -29,4 +29,4 @@
 - 1 on 1
 
 ### Purpose of project
-- tech interview
+- having blast!
